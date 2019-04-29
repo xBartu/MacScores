@@ -1,13 +1,18 @@
 <template>
-  <div>
+  <div> 
+    <a href="https://github.com/svtek/MacScores"><img style="position: absolute; top: -30px; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    <div class="github">
+      <a href="https://github.com/svtek/MacScores"><img alt="GitHub" class="stars" src="https://img.shields.io/github/stars/svtek/MacScores.svg?style=social"></a>
+    </div>
     <div class="my-3 my-md-5 mx-9">
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6 col-lg-3">
             <div class="card">
               <div class="card-body">
-                <h3 class="mb-1">Best Product</h3>
+                <h3 class="mb-1">Best Product Per $</h3>
                 <a :href="profileLink(bestProduct.id)">{{bestProduct.name}}</a>
+                <div class="text-muted">{{bestProduct.description}}</div>
                 <div class="text-muted">${{bestProduct.price}}</div>
               </div>
             </div>
@@ -15,8 +20,9 @@
           <div class="col-sm-6 col-lg-3">
             <div class="card">
               <div class="card-body">
-                <h3 class="mb-1">Best Macbook</h3>
+                <h3 class="mb-1">Best Macbook Per $</h3>
                 <a :href="profileLink(bestMacbook.id)">{{bestMacbook.name}}</a>
+                <div class="text-muted">{{bestMacbook.description}}</div>
                 <div class="text-muted">${{bestMacbook.price}}</div>
               </div>
             </div>
@@ -24,8 +30,9 @@
           <div class="col-sm-6 col-lg-3">
             <div class="card">
               <div class="card-body">
-                <h3 class="mb-1">Best iMac</h3>
+                <h3 class="mb-1">Best iMac Per $</h3>
                 <a :href="profileLink(bestIMac.id)">{{bestIMac.name}}</a>
+                <div class="text-muted">{{bestIMac.description}}</div>
                 <div class="text-muted">${{bestIMac.price}}</div>
               </div>
             </div>
@@ -33,8 +40,9 @@
           <div class="col-sm-6 col-lg-3">
             <div class="card">
               <div class="card-body">
-                <h3 class="mb-1">Best Mac Mini</h3>
+                <h3 class="mb-1">Best Mac Mini Per $</h3>
                 <a :href="profileLink(bestMacMini.id)">{{bestMacMini.name}}</a>
+                <div class="text-muted">{{bestMacMini.description}}</div>
                 <div class="text-muted">${{bestMacMini.price}}</div>
               </div>  
             </div>
@@ -94,13 +102,13 @@
                     </span>
                   </div>
                 </div>
+                <div class="ml-3">
+                  <button @click="filterBtn('all')" class="btn btn-secondary">All</button> 
+                  <button @click="filterBtn('macbook')" class="btn btn-secondary">Macbook</button>
+                  <button @click="filterBtn('imac')" class="btn btn-secondary">iMac</button>
+                  <button @click="filterBtn('mac mini')" class="btn btn-secondary">Mac mini</button>
+                </div>
                 <div class="card-options">
-                  <div class="mt-3">
-                    <button @click="filterBtn('all')" class="btn btn-secondary">All</button> 
-                    <button @click="filterBtn('macbook')" class="btn btn-secondary">Macbook</button>
-                    <button @click="filterBtn('imac')" class="btn btn-secondary">iMac</button>
-                    <button @click="filterBtn('mac mini')" class="btn btn-secondary">Mac mini</button>
-                  </div>
                   <div class="form-group mt-4 ml-1">
                     <label class="text-center form-label"></label>
                     <label class="custom-switch">
@@ -122,9 +130,6 @@
                         <th class="sorting unselectable" tabindex="0" rowspan="1" colspan="1" style="width: 50px;">
                           Name
                         </th>
-                        <th class="sorting unselectable" tabindex="0" rowspan="1" colspan="1" style="width: 50px;">
-                          Description
-                        </th>
                         <th @click="sortGeneral('single_score')" class="sorting unselectable" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 50px;">
                           Single - Core Score
                         </th>
@@ -140,17 +145,17 @@
                         <th @click="sortPerDollarMulti" class="sorting unselectable" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 50px;">
                           Multi-score per $
                         </th>
-                        <th class="sorting unselectable" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1">
-                          Buy
-                        </th>
-                        <th class="sorting unselectable" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1">
-                          Edit On Github
-                        </th>
+                        <th class="w-1 sorting unselectable" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"/>
                       </tr>
                     </thead>
-                    <tbody v-for="mac in tableItems" :key="mac.id">
-                      <MacItem :mac="mac"></MacItem>
-                    </tbody>
+                    <div v-if="tableItems.length" style="display: contents;">
+                      <tbody v-for="mac in tableItems" :key="mac.id">
+                        <MacItem :mac="mac"></MacItem>
+                      </tbody>
+                    </div>
+                    <div v-else class="card-body">
+                       <span class="text-center d-inline"> <i class="fe fe-search"/>No Item Found </span>
+                    </div>
                   </table>
                 </div>
               </div>
@@ -187,21 +192,25 @@ export default {
       onMarket: true,
       bestProduct: {
         name: '',
+        description: '',
         id: '',
         price: ''
       },
       bestMacbook:  {
         name: '',
+        description: '',
         id: '',
         price: ''
       },
       bestIMac:  {
         name: '',
+        description: '',
         id: '',
         price: ''
       },
       bestMacMini:  {
         name: '',
+        description: '',
         id: '',
         price: ''
       },
@@ -219,30 +228,28 @@ export default {
 
   created() {
     this.loading = true;
-    this.macs = datas.macs;
+    this.macs = this.prepareRatios(datas.macs)
     this.tableItems = this.macs;
     this.bestProduct = this.findBest('')
     this.bestMacbook = this.findBest('macbook')
     this.bestIMac = this.findBest('imac')
     this.bestMacMini = this.findBest('mac mini')
     this.filterMacsAcrossFilters()
+    this.sortPerDollarSingle()
     this.loading = false;
   },
   components: {
     MacItem
   },
   methods: {
-    clear() { // is that needed?
-      this.nameFilter = ""
-      this.selectedType = ""
-      this.singleMinScore = ''
-      this.singleMaxScore = ''
-      this.multiMaxScore = ''
-      this.multiMinScore = ''
-      this.minPrice = ''
-      this.maxPrice = ''
+    prepareRatios(macs) {
+      macs.forEach(mac => {
+        mac.multiRatio = mac.multi_score !== 0 || mac.price !==  0 ? ( (mac.multi_score / mac.price).toFixed(2) == Number.POSITIVE_INFINITY || (mac.multi_score / mac.price).toFixed(2) == Number.NAN ? '' : (mac.multi_score / mac.price ).toFixed(2) ) : ''
+        mac.singleRatio = mac.single_score !== 0 || mac.price !==  0 ? ( (mac.single_score / mac.price).toFixed(2) == Number.POSITIVE_INFINITY || (mac.single_score / mac.price).toFixed(2) == Number.NAN ? '' : (mac.single_score / mac.price).toFixed(2) ) : ''
+      })
+      return macs
     },
-
+    
     filterByFieldInt(macs, compareField, low, high) {
       return macs.filter(item => { return (low || 0) <= item[compareField] && item[compareField] <= (high || 1000000) })
     },
@@ -298,17 +305,24 @@ export default {
       })
       if (this.perDFlagS) {
         this.perDFlagS = false
-        this.tableItems = sorted
+        this.tableItems = sorted.reverse()
       } else {
         this.perDFlagS = true
-        this.tableItems = sorted.reverse()
+        this.tableItems = sorted
       }
       this.sortField = 'single_score_per_dolar'
     },
 
     filterBtn (selectedType) {
-      this.selectedType = selectedType;
-      this.filterMacsAcrossFilters();
+      this.selectedType = selectedType
+      if(selectedType == 'all') {
+        this.nameFilter = ' '  
+      } else{
+        this.nameFilter = selectedType
+      }
+      this.filterMacsAcrossFilters()
+      this.sortPerDollarSingle()
+      this.perDFlagS = true
     },
 
     findBest (type) {
@@ -320,7 +334,7 @@ export default {
         let ratio2 = b.single_score !== 0 && b.price !== 0 ? b.single_score / b.price : 0
         return ratio1 > ratio2 ? -1 : ratio1 < ratio2 ? 1 : 0
       })
-      return {name : macs[0].model_identifier, price: macs[0].price, id: macs[0]._id }
+      return {name : macs[0].name, description: macs[0].processor + ' @ ' + (parseFloat(macs[0].processor_freq) / 1000).toFixed(1) + 'Ghz ('+macs[0].processor_cores+ (macs[0].processor_cores == 1 ? ' core) ' :' cores) '), price: macs[0].price, id: macs[0]._id }
     },
 
     profileLink(id) {
@@ -332,10 +346,11 @@ export default {
 
 <style>
 .github {
-  margin: 1%;
-  width: 25%;
-  padding-left: 5%;
-  padding-left: -15px;
-  position: absolute
+  position: absolute;
+  margin-top: 1%;
+  margin-left: 1%;
+}
+.stars {
+  width: 85px;
 }
 </style>
